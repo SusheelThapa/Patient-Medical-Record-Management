@@ -1,0 +1,23 @@
+{
+  "name": "patient-record-management-system",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SusheelThapa/Patient-Record-Management-System.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SusheelThapa/Patient-Record-Management-System/issues"
+  },
+  "homepage": "https://github.com/SusheelThapa/Patient-Record-Management-System#readme",
+  "devDependencies": {
+    "hardhat": "^2.10.0"
+  }
+}
