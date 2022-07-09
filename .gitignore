@@ -1,0 +1,9 @@
+# NodeJs files
+node_modules
+
+# VS code files
+.vscode
+
+# Hardhat compilation files
+cache
+artifacts
