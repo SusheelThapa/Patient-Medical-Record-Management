@@ -50,4 +50,8 @@ contract Token {
         );
         total_doctor += 1;
     }
+
+    function registerDoctor(address doctor_address) public onlyOwner {
+        doctors[doctor_address].registered = true;
+    }
 }
