@@ -15,6 +15,11 @@ contract Token {
         _;
     }
 
+    modifier onlyRegisterDoctor() {
+        require(doctors[msg.sender].registered, "You are not doctor");
+        _;
+    }
+
     struct Doctor {
         string first_name;
         string last_name;
@@ -25,14 +30,6 @@ contract Token {
     }
 
     mapping(address => Doctor) public doctors;
-
-    function isDoctorRegister(address doctor_address)
-        public
-        view
-        returns (bool)
-    {
-        return doctors[doctor_address].registered;
-    }
 
     function registerDoctor(address doctor_address) public onlyOwner {
         doctors[doctor_address].registered = true;
@@ -63,6 +60,12 @@ contract Token {
         diagnosing
     }
 
+    struct MedicalReport {
+        string diagnosis;
+        string medicine;
+        address checked_by_doctor;
+    }
+
     struct Patient {
         string first_name;
         string last_name;
@@ -91,5 +94,13 @@ contract Token {
         );
 
         total_patients += 1;
+    }
+
+    function updatePatient(
+        string memory diagnosis,
+        string memory medicine,
+        address patient_address
+    ) public onlyRegisterDoctor {
+        patients[patient_address].status = PatientDiagnosisStatus.diagnosed;
     }
 }
