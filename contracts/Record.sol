@@ -1,8 +1,9 @@
 //SPDX-License-Identifier: UNLICENSED
 pragma solidity >=0.5.0 <0.9.0;
+pragma experimental ABIEncoderV2;
 
 contract Token {
-    address public owner;
+    address  owner;
     uint256 public total_doctors = 0;
     uint256 public total_patients = 0;
 
@@ -42,7 +43,7 @@ contract Token {
         uint8 age,
         string memory gender,
         string memory department
-    ) external onlyOwner {
+    ) public  onlyOwner {
         doctors[doctor_address] = Doctor(
             first_name,
             last_name,
@@ -76,6 +77,7 @@ contract Token {
     }
 
     mapping(address => Patient) public patients;
+    mapping(address => MedicalReport[]) medical_reports;
 
     function addPatient(
         address patient_address,
@@ -83,7 +85,7 @@ contract Token {
         string memory last_name,
         uint8 age,
         string memory gender
-    ) external onlyOwner {
+    )public  onlyOwner {
         patients[patient_address] = Patient(
             first_name,
             last_name,
@@ -102,5 +104,21 @@ contract Token {
         address patient_address
     ) public onlyRegisterDoctor {
         patients[patient_address].status = PatientDiagnosisStatus.diagnosed;
+        medical_reports[patient_address].push(MedicalReport(diagnosis, medicine, patient_address));
+        patients[patient_address].total_medical_checkup += 1;
     }
+
+    function getMedicalReport(address patient_address)public view returns(MedicalReport[] memory)
+    {
+        return medical_reports[patient_address];
+    }
+    /*These are the function to be executed by Patient only*/
+    function givePermission(address patient_address, address doctor_address)
+        public
+    {}
+
+    function removePermission(address patient_address, address doctor_address)
+        public
+    {}
+
 }
