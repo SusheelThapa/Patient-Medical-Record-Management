@@ -3,7 +3,7 @@ pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
 contract Token {
-    address  owner;
+    address owner;
     uint256 public total_doctors = 0;
     uint256 public total_patients = 0;
 
@@ -43,7 +43,7 @@ contract Token {
         uint8 age,
         string memory gender,
         string memory department
-    ) public  onlyOwner {
+    ) public onlyOwner {
         doctors[doctor_address] = Doctor(
             first_name,
             last_name,
@@ -68,6 +68,7 @@ contract Token {
     }
 
     struct Patient {
+        uint256 id;
         string first_name;
         string last_name;
         uint8 age;
@@ -78,6 +79,7 @@ contract Token {
 
     mapping(address => Patient) public patients;
     mapping(address => MedicalReport[]) medical_reports;
+    mapping(address => bool) patient_medical_report_permisson_to_doctor;
 
     function addPatient(
         address patient_address,
@@ -85,8 +87,10 @@ contract Token {
         string memory last_name,
         uint8 age,
         string memory gender
-    )public  onlyOwner {
+    ) public onlyOwner {
+        total_patients += 1;
         patients[patient_address] = Patient(
+            total_patients,
             first_name,
             last_name,
             age,
@@ -94,8 +98,6 @@ contract Token {
             0,
             PatientDiagnosisStatus.not_diagnose
         );
-
-        total_patients += 1;
     }
 
     function updatePatient(
@@ -103,22 +105,34 @@ contract Token {
         string memory medicine,
         address patient_address
     ) public onlyRegisterDoctor {
+        require(
+            patient_medical_report_permisson_to_doctor[msg.sender] == true,
+            "You don't have access to update the medical histoy of this patients"
+        );
+
         patients[patient_address].status = PatientDiagnosisStatus.diagnosed;
-        medical_reports[patient_address].push(MedicalReport(diagnosis, medicine, patient_address));
+        medical_reports[patient_address].push(
+            MedicalReport(diagnosis, medicine, patient_address)
+        );
         patients[patient_address].total_medical_checkup += 1;
     }
 
-    function getMedicalReport(address patient_address)public view returns(MedicalReport[] memory)
+    function getMedicalReports(address patient_address)
+        public
+        view
+        returns (MedicalReport[] memory)
     {
         return medical_reports[patient_address];
     }
+
     /*These are the function to be executed by Patient only*/
-    function givePermission(address patient_address, address doctor_address)
-        public
-    {}
+    function givePermission(address doctor_address) public {
+        require(patients[msg.sender].id > 0, "You aren't patient");
+        patient_medical_report_permisson_to_doctor[doctor_address] = true;
+    }
 
-    function removePermission(address patient_address, address doctor_address)
-        public
-    {}
-
+    function removePermission(address doctor_address) public {
+        require(patients[msg.sender].id > 0, "You aren't patient");
+        patient_medical_report_permisson_to_doctor[doctor_address] = false;
+    }
 }
