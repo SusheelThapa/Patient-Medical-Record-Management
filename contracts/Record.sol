@@ -60,7 +60,7 @@ contract Record {
     }
 
     /*Mapping functions*/
-    mapping(address => Doctor) public doctors;
+    mapping(address => Doctor) doctors;
     mapping(address => Patient) public patients;
     mapping(address => MedicalReport[]) medical_reports;
     mapping(address => bool) patient_medical_report_permisson_to_doctor;
@@ -90,6 +90,14 @@ contract Record {
             false
         );
         total_doctors += 1;
+    }
+
+    function getDoctor(address doctor_address)
+        public
+        view
+        returns (Doctor memory)
+    {
+        return doctors[doctor_address];
     }
 
     // Adding the patient
