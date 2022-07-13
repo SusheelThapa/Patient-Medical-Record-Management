@@ -2,9 +2,9 @@
 pragma solidity >=0.5.0 <0.9.0;
 pragma experimental ABIEncoderV2;
 
-contract Token {
+contract Record {
     /*State variables*/
-    address owner;
+    address public owner;
     uint256 public total_doctors = 0;
     uint256 public total_patients = 0;
 
