@@ -39,5 +39,5 @@ Patient Record Management System based on blockchain technology
 - Run the test script
 
   ```sh
-  npx hardhat compile
+  npx hardhat test
   ```
