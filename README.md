@@ -10,6 +10,8 @@ Patient Record Management System based on blockchain technology
 
 ### Installation
 
+### For Compilation of Solidity Files
+
 - First of all install the node modules along with hardhat
 
   ```sh
@@ -25,3 +27,17 @@ Patient Record Management System based on blockchain technology
   ```
 
   _It will show "Compiled 1 solidity file successfully"_
+
+### For testing Solidity files
+
+- For testing you need to install some other packages. So go on install it
+
+  ```sh
+  npm install --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle ethereum-waffle chai
+  ```
+
+- Run the test script
+
+  ```sh
+  npx hardhat compile
+  ```
