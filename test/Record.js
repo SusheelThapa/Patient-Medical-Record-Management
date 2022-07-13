@@ -5,21 +5,52 @@ describe("Election contract", function () {
   let Record;
   let PatientDataBaseCompany;
   let owner;
-  let addr1;
-  let addr2;
+  let doctor;
+  let patient;
   let addrs;
 
   beforeEach(async function () {
+    /*Get the instance of the contracts*/
     Record = await ethers.getContractFactory("Record");
-    [owner, addr1, addr2, ...addrs] = await ethers.getSigners();
-    PatientDataBaseCompany = await Record.deploy();
 
+    /*Get all the address of the test account*/
+    [owner, doctor, patient, ...addrs] = await ethers.getSigners();
+
+    /*Deploy the contracts*/
+    PatientDataBaseCompany = await Record.deploy();
     await PatientDataBaseCompany.deployed();
+
+    /*Add the doctor to the contract*/
+
+    await PatientDataBaseCompany.addDoctor(
+      doctor.address,
+      "Susheel",
+      "Thapa",
+      30,
+      "Male",
+      "Neurology"
+    );
+
+    /*Register the doctor*/
+    await PatientDataBaseCompany.registerDoctor(doctor.address);
   });
 
   describe("Deployment", function () {
     it("Should set the right owner", async function () {
       expect(await PatientDataBaseCompany.owner()).to.equal(owner.address);
+    });
+  });
+
+  describe("Doctors", function () {
+    it("Total number of Doctor", async function () {
+      expect(await PatientDataBaseCompany.total_doctors()).to.equal(1);
+    });
+
+    it("Is Doctor Registered", async function () {
+      let doctor_details = await PatientDataBaseCompany.getDoctor(
+        doctor.address
+      );
+      expect(doctor_details.at(5)).to.equal(true);
     });
   });
 });
