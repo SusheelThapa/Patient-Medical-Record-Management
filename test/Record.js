@@ -33,6 +33,15 @@ describe("Election contract", function () {
 
     /*Register the doctor*/
     await PatientDataBaseCompany.registerDoctor(doctor.address);
+
+    /*Add Patient to the contract*/
+    await PatientDataBaseCompany.addPatient(
+      patient.address,
+      "Samir",
+      "Thapa",
+      10,
+      "Male"
+    );
   });
 
   describe("Deployment", function () {
@@ -57,6 +66,23 @@ describe("Election contract", function () {
       expect(doctor_details.at(3)).to.equal("Male");
       expect(doctor_details.at(4)).to.equal("Neurology");
       expect(doctor_details.at(5)).to.equal(true);
+    });
+  });
+
+  describe("Patient Details", function () {
+    it("Total Number of Patient", async function () {
+      expect(await PatientDataBaseCompany.total_patients()).to.equal(1);
+    });
+
+    it("Patient Detail", async function () {
+      let patient_detail = await PatientDataBaseCompany.getPatient(
+        patient.address
+      );
+
+      expect(await patient_detail.at(1)).to.equal("Samir");
+      expect(await patient_detail.at(2)).to.equal("Thapa");
+      expect(await patient_detail.at(3)).to.equal(10);
+      expect(await patient_detail.at(4)).to.equal("Male");
     });
   });
 });
