@@ -100,6 +100,14 @@ contract Record {
         return doctors[doctor_address];
     }
 
+    function getPatient(address patient_address)
+        public
+        view
+        returns (Patient memory)
+    {
+        return patients[patient_address];
+    }
+
     // Adding the patient
     function addPatient(
         address patient_address,
