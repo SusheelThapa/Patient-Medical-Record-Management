@@ -46,10 +46,16 @@ describe("Election contract", function () {
       expect(await PatientDataBaseCompany.total_doctors()).to.equal(1);
     });
 
-    it("Is Doctor Registered", async function () {
+    it("Doctor Detail", async function () {
       let doctor_details = await PatientDataBaseCompany.getDoctor(
         doctor.address
       );
+
+      expect(doctor_details.at(0)).to.equal("Susheel");
+      expect(doctor_details.at(1)).to.equal("Thapa");
+      expect(doctor_details.at(2)).to.equal(30);
+      expect(doctor_details.at(3)).to.equal("Male");
+      expect(doctor_details.at(4)).to.equal("Neurology");
       expect(doctor_details.at(5)).to.equal(true);
     });
   });
