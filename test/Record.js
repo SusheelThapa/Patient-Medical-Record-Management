@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const { upgrades, ethers, run } = require("hardhat");
 
-describe("Election contract", function () {
+describe("Record", function () {
   let Record;
   let PatientDataBaseCompany;
   let owner;
@@ -86,10 +86,23 @@ describe("Election contract", function () {
     });
   });
 
-  describe("Permission", function () {
+  describe("Permission and Update medical History of Patient", function () {
     beforeEach(async function () {
+      /*Give permission for the doctor to update the medical history of the Patient*/
       await PatientDataBaseCompany.connect(patient).givePermission(
         doctor.address
+      );
+
+      /*Updating the medical history of the patient*/
+      await PatientDataBaseCompany.connect(doctor).updatePatientMedicalReport(
+        "Fever",
+        "Paracetamol",
+        patient.address
+      );
+      await PatientDataBaseCompany.connect(doctor).updatePatientMedicalReport(
+        "Headache",
+        "NIMS",
+        patient.address
       );
     });
 
@@ -100,6 +113,37 @@ describe("Election contract", function () {
           patient.address
         )
       ).to.equal(true);
+    });
+
+    it("Checking updated medical history of user", async function () {
+      let patient_medical_report = await PatientDataBaseCompany.connect(
+        doctor
+      ).getMedicalReports(patient.address);
+
+      expect(await patient_medical_report.at(0).at(0)).to.equal("Fever");
+      expect(await patient_medical_report.at(0).at(1)).to.equal("Paracetamol");
+      expect(await patient_medical_report.at(0).at(2)).to.equal(
+        patient.address
+      );
+
+      expect(await patient_medical_report.at(1).at(0)).to.equal("Headache");
+      expect(await patient_medical_report.at(1).at(1)).to.equal("NIMS");
+      expect(await patient_medical_report.at(1).at(2)).to.equal(
+        patient.address
+      );
+    });
+
+    it("Removing Permission", async function () {
+      await PatientDataBaseCompany.connect(patient).removePermission(
+        doctor.address
+      );
+
+      expect(
+        await PatientDataBaseCompany.connect(patient).checkPermission(
+          doctor.address,
+          patient.address
+        )
+      ).to.equal(false);
     });
   });
 });
