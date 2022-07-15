@@ -27,6 +27,12 @@ contract Record {
         _;
     }
 
+    /*It checks if the msg.sender is patient or not*/
+    modifier onlyPatient() {
+        require(patients[msg.sender].id > 0, "You aren't patient");
+        _;
+    }
+
     /*Custom made Data types*/
     enum PatientDiagnosisStatus {
         not_diagnose,
@@ -64,6 +70,7 @@ contract Record {
     mapping(address => Patient) public patients;
     mapping(address => MedicalReport[]) medical_reports;
     mapping(address => bool) patient_medical_report_permisson_to_doctor;
+    mapping(address => address[]) permissions;
 
     /*Functions*/
 
@@ -106,6 +113,19 @@ contract Record {
         returns (Patient memory)
     {
         return patients[patient_address];
+    }
+
+    function checkPermission(address doctor_address, address patient_address)
+        public
+        view
+        returns (bool)
+    {
+        for (uint256 i = 0; i < permissions[patient_address].length; i++) {
+            if (doctor_address == permissions[patient_address][i]) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // Adding the patient
@@ -158,18 +178,13 @@ contract Record {
     }
 
     // Give permission to the doctor to update medical history of a particular patients
-    function givePermission(address doctor_address) public {
-        // Check it the msg.sender is patient or not.
-        require(patients[msg.sender].id > 0, "You aren't patient");
-
-        patient_medical_report_permisson_to_doctor[doctor_address] = true;
+    function givePermission(address doctor_address) public onlyPatient {
+        permissions[msg.sender].push(doctor_address);
     }
 
     // Remove permission for the doctor to update medical history of a particular patient
     function removePermission(address doctor_address) public {
-        // Check it the msg.sender is patient or not.
-        require(patients[msg.sender].id > 0, "You aren't patient");
-
-        patient_medical_report_permisson_to_doctor[doctor_address] = false;
+        /*Here the passed argument is redundant*/
+        permissions[msg.sender].pop();
     }
 }

@@ -85,4 +85,21 @@ describe("Election contract", function () {
       expect(await patient_detail.at(4)).to.equal("Male");
     });
   });
+
+  describe("Permission", function () {
+    beforeEach(async function () {
+      await PatientDataBaseCompany.connect(patient).givePermission(
+        doctor.address
+      );
+    });
+
+    it("Had doctor got permission to edit medical report of patients?", async function () {
+      expect(
+        await PatientDataBaseCompany.checkPermission(
+          doctor.address,
+          patient.address
+        )
+      ).to.equal(true);
+    });
+  });
 });
