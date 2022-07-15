@@ -70,10 +70,6 @@ describe("Record", function () {
   });
 
   describe("Patient Details", function () {
-    it("Total Number of Patient", async function () {
-      expect(await PatientDataBaseCompany.total_patients()).to.equal(1);
-    });
-
     it("Patient Detail", async function () {
       let patient_detail = await PatientDataBaseCompany.getPatient(
         patient.address
@@ -144,6 +140,15 @@ describe("Record", function () {
           patient.address
         )
       ).to.equal(false);
+    });
+  });
+
+  describe("Total number of Doctor and Patient", function () {
+    it("Total Number of Patient", async function () {
+      expect(await PatientDataBaseCompany.total_patients()).to.equal(1);
+    });
+    it("Total Number of Doctor", async function () {
+      expect(await PatientDataBaseCompany.total_doctors()).to.equal(1);
     });
   });
 });
