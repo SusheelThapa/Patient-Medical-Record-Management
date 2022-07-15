@@ -99,35 +99,6 @@ contract Record {
         total_doctors += 1;
     }
 
-    function getDoctor(address doctor_address)
-        public
-        view
-        returns (Doctor memory)
-    {
-        return doctors[doctor_address];
-    }
-
-    function getPatient(address patient_address)
-        public
-        view
-        returns (Patient memory)
-    {
-        return patients[patient_address];
-    }
-
-    function checkPermission(address doctor_address, address patient_address)
-        public
-        view
-        returns (bool)
-    {
-        for (uint256 i = 0; i < permissions[patient_address].length; i++) {
-            if (doctor_address == permissions[patient_address][i]) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Adding the patient
     function addPatient(
         address patient_address,
@@ -149,15 +120,21 @@ contract Record {
     }
 
     // Updating the medical history of the patients
-    function updatePatient(
+    function updatePatientMedicalReport(
         string memory diagnosis,
         string memory medicine,
         address patient_address
     ) public onlyRegisterDoctor {
         // Checking if the Doctor who is updated the patient medical history has permission or not
+        bool permission_status;
+        for (uint256 i = 0; i < permissions[patient_address].length; i++) {
+            if (permissions[patient_address][i] == msg.sender) {
+                permission_status = true;
+            }
+        }
         require(
-            patient_medical_report_permisson_to_doctor[msg.sender] == true,
-            "You don't have access to update the medical histoy of this patients"
+            permission_status == true,
+            "You don't have permission to update this patient medical history"
         );
 
         // Updating patients medical history
@@ -186,5 +163,37 @@ contract Record {
     function removePermission(address doctor_address) public {
         /*Here the passed argument is redundant*/
         permissions[msg.sender].pop();
+    }
+
+    /*Get the doctor detail*/
+    function getDoctor(address doctor_address)
+        public
+        view
+        returns (Doctor memory)
+    {
+        return doctors[doctor_address];
+    }
+
+    /*Get the patient detail*/
+    function getPatient(address patient_address)
+        public
+        view
+        returns (Patient memory)
+    {
+        return patients[patient_address];
+    }
+
+    /*Check if the doctor has got the permission or not*/
+    function checkPermission(address doctor_address, address patient_address)
+        public
+        view
+        returns (bool)
+    {
+        for (uint256 i = 0; i < permissions[patient_address].length; i++) {
+            if (doctor_address == permissions[patient_address][i]) {
+                return true;
+            }
+        }
+        return false;
     }
 }
