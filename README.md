@@ -10,7 +10,7 @@ Patient Record Management System based on blockchain technology
 
 ### Installation
 
-### For Compilation of Solidity Files
+#### For Compilation of Solidity Files
 
 - First of all install the node modules along with hardhat
 
@@ -28,7 +28,7 @@ Patient Record Management System based on blockchain technology
 
   _It will show "Compiled 1 solidity file successfully"_
 
-### For testing Solidity files
+#### For testing Solidity files
 
 - For testing you need to install some other packages. So go on install it
 
