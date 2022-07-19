@@ -150,3 +150,26 @@ You can also setup this project in you local machine, run test case and integrat
   ```sh
   npx hardhat test
   ```
+
+#### Deployment Script
+
+Inside the script folder you can find your deployment script.
+
+1. Open two terminal
+2. First of all install the require library.
+
+   ```sh
+   npm install --save-dev @nomiclabs/hardhat-ethers ethers @nomiclabs/hardhat-waffle ethereum-waffle chai
+   ```
+
+3. One one terminal run
+   ```sh
+    npx hardhat node
+   ```
+4. On another terminal, run:
+
+```sh
+  npx hardhat run scripts/deploy_record.js --network localhost
+```
+
+5. You will notice some change on the terminal where you have execute `npx hardhat node` command and on your working tree a folder will be created which contain the address used to deploy contract and ABI code of smart contract.
